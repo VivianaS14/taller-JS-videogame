@@ -1,9 +1,19 @@
 const canvas = document.querySelector('#game');
 /* Llamar al metodo get context de canvas definimos que es en 2D */
 const game = canvas.getContext('2d');
+// Botones
+const btnUp = document.querySelector('#up');
+const btnLeft = document.querySelector('#left');
+const btnRigth = document.querySelector('#right');
+const btnDown = document.querySelector('#down');
 // Variables globales
 let canvasSize;
 let elementsSize;
+// Player
+const playerPosition = {
+    x: undefined,
+    y: undefined
+}
 
 window.addEventListener('load', setCanvasSize);
 window.addEventListener('resize', setCanvasSize);
@@ -29,16 +39,67 @@ function startGame() {
 
     // Array bidimensional
     const map = maps[0];
+    // limpiamos el string con trim y slipt para separarlo por saltos de linea
     const mapRows = map.trim().split('\n');
     //console.log(mapRows);
+    // por cada fila, la volvemos a separar y limpiar, se comvierte en un array de arrays
     const mapRowsCols = mapRows.map(row => row.trim().split(''))
     //console.log(mapCols);
-
-    for (let row = 1; row <= 10; row++) {
+    // Solucion con forEach
+    mapRowsCols.forEach((row, rowI) => {
+        row.forEach((col, colI) => {
+            //console.log({ row, rowI, col, colI });
+            // console.log(emojis[col]);
+            const emoji = emojis[col];
+            const posX = elementsSize * (colI + 1);
+            const posY = elementsSize * (rowI + 1);
+            game.fillText(emoji, posX, posY);
+        })
+    });
+    //Solucion con ciclo for
+    /* for (let row = 1; row <= 10; row++) {
         for (let col = 1; col <= 10; col++) {
             game.fillText(emojis[mapRowsCols[row - 1][col - 1]], elementsSize * col, elementsSize * row)
         }
+    } */
+}
+
+// Escuchar tecla presionada
+window.addEventListener('keydown', moveByKeys)
+// Dando click en los botones
+btnUp.addEventListener('click', moveUp)
+btnLeft.addEventListener('click', moveLeft)
+btnRigth.addEventListener('click', moveRight)
+btnDown.addEventListener('click', moveDown)
+
+function moveByKeys(event) {
+    //console.log(event);
+    switch (event.key) {
+        case 'ArrowUp':
+            moveUp()
+            break;
+        case 'ArrowLeft':
+            moveLeft()
+            break;
+        case 'ArrowRight':
+            moveRight()
+            break;
+        case 'ArrowDown':
+            moveDown()
+            break;
     }
+}
+function moveUp() {
+    console.log('Me quiero mover hacia arriba');
+}
+function moveLeft() {
+    console.log('Me quiero mover hacia izquierda');
+}
+function moveRight() {
+    console.log('Me quiero mover hacia derecha');
+}
+function moveDown() {
+    console.log('Me quiero mover hacia abajo');
 }
 
 //----------------------------------------------------
