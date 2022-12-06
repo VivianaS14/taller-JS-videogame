@@ -40,6 +40,10 @@ let enemyPositions = [];
 window.addEventListener('load', setCanvasSize);
 window.addEventListener('resize', setCanvasSize);
 
+btnReStart.addEventListener('click', () => {
+    window.location.reload()
+})
+
 function setCanvasSize() {
     // Mismo cuadrado responsive
     if (window.innerHeight > window.innerWidth) {
