@@ -11,6 +11,9 @@ let canvasSize;
 let elementsSize;
 // Level
 let level = 0
+// lives
+let lives = 3;
+const spanLives = document.querySelector('#lives')
 // Player
 const playerPosition = {
     x: undefined,
@@ -53,6 +56,8 @@ function startGame() {
         gameWin()
         return
     }
+    // Mostrar vidas
+    showLives();
     // limpiamos el string con trim y slipt para separarlo por saltos de linea
     const mapRows = map.trim().split('\n');
     //console.log(mapRows);
@@ -120,6 +125,7 @@ function movePlayer() {
     // Colision enemigo
     if (enemyCollision) {
         console.log('Chocaste enemigo');
+        levelFail()
     }
     game.fillText(emojis['PLAYER'], playerPosition.x, playerPosition.y);
 }
@@ -131,6 +137,23 @@ function levelWin() {
 
 function gameWin() {
     console.log('Terminaste el juego!!');
+}
+
+function levelFail() {
+    lives--
+
+    if (lives <= 0) {
+        lives = 3;
+        level = 0;
+    }
+
+    playerPosition.x = undefined
+    playerPosition.y = undefined
+    startGame()
+}
+
+function showLives() {
+    spanLives.innerText = emojis['HEART'].repeat(lives)
 }
 
 // Escuchar tecla presionada

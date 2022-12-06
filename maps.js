@@ -12,6 +12,7 @@ const emojis = {
   'BOMB_COLLISION': '🔥',
   'GAME_OVER': '👎',
   'WIN': '🏆',
+  'HEART': '❤️'
 };
 
 // Every Map[ Row["Col"]]
