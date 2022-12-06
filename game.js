@@ -9,6 +9,8 @@ const btnDown = document.querySelector('#down');
 // Variables globales
 let canvasSize;
 let elementsSize;
+// Level
+let level = 0
 // Player
 const playerPosition = {
     x: undefined,
@@ -37,7 +39,7 @@ function setCanvasSize() {
     canvas.setAttribute('height', canvasSize)
 
     elementsSize = canvasSize / 10;
-    startGame();
+    startGame(level);
 }
 
 function startGame() {
@@ -45,7 +47,12 @@ function startGame() {
     game.textAlign = 'end';
 
     // Array bidimensional
-    const map = maps[0];
+    const map = maps[level];
+    // Ya no hay mas mapas
+    if (!map) {
+        gameWin()
+        return
+    }
     // limpiamos el string con trim y slipt para separarlo por saltos de linea
     const mapRows = map.trim().split('\n');
     //console.log(mapRows);
@@ -102,6 +109,7 @@ function movePlayer() {
     // Colision Fija
     if (giftCollision) {
         console.log('Subiste de nivel');
+        levelWin();
     }
 
     const enemyCollision = enemyPositions.find(enemy => {
@@ -114,6 +122,15 @@ function movePlayer() {
         console.log('Chocaste enemigo');
     }
     game.fillText(emojis['PLAYER'], playerPosition.x, playerPosition.y);
+}
+
+function levelWin() {
+    level++;
+    startGame()
+}
+
+function gameWin() {
+    console.log('Terminaste el juego!!');
 }
 
 // Escuchar tecla presionada
