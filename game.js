@@ -14,6 +14,11 @@ const playerPosition = {
     x: undefined,
     y: undefined
 }
+// Gift
+const giftPosition = {
+    x: undefined,
+    y: undefined
+}
 
 window.addEventListener('load', setCanvasSize);
 window.addEventListener('resize', setCanvasSize);
@@ -63,6 +68,9 @@ function startGame() {
                     playerPosition.y = posY;
                     //console.log({ playerPosition });
                 }
+            } else if (col == 'I') {
+                giftPosition.x = posX
+                giftPosition.y = posY
             }
             // La claberita
             game.fillText(emoji, posX, posY);
@@ -79,6 +87,13 @@ function startGame() {
 }
 
 function movePlayer() {
+    const giftCollisionX = playerPosition.x.toFixed(2) == giftPosition.x.toFixed(2)
+    const giftCollisionY = playerPosition.y.toFixed(2) == giftPosition.y.toFixed(2)
+    const giftCollision = giftCollisionX && giftCollisionY
+    // Colision Fija
+    if (giftCollision) {
+        console.log('Subiste de nivel');
+    }
     game.fillText(emojis['PLAYER'], playerPosition.x, playerPosition.y);
 }
 
@@ -110,7 +125,7 @@ function moveByKeys(event) {
 function moveUp() {
     //console.log('Me quiero mover hacia arriba');
     //Para no salirnos del mapa 
-    if ((playerPosition.y - elementsSize) < 0) {
+    if ((playerPosition.y - elementsSize) < elementsSize) {
         console.log('OUT');
     } else {
         playerPosition.y -= elementsSize
@@ -120,7 +135,7 @@ function moveUp() {
 function moveLeft() {
     //console.log('Me quiero mover hacia izquierda');
     //Para no salirnos del mapa 
-    if ((playerPosition.x - elementsSize) <= 0) {
+    if ((playerPosition.x - elementsSize) < elementsSize) {
         console.log('OUT');
     } else {
         playerPosition.x -= elementsSize
