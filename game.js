@@ -19,6 +19,8 @@ const giftPosition = {
     x: undefined,
     y: undefined
 }
+// Bombs
+let enemyPositions = [];
 
 window.addEventListener('load', setCanvasSize);
 window.addEventListener('resize', setCanvasSize);
@@ -52,6 +54,8 @@ function startGame() {
     //console.log(mapCols);
     // Limpiar mapa anterior
     game.clearRect(0, 0, canvasSize, canvasSize)
+    // Limpiar enemigos
+    enemyPositions = [];
     // Solucion con forEach
     mapRowsCols.forEach((row, rowI) => {
         row.forEach((col, colI) => {
@@ -71,6 +75,11 @@ function startGame() {
             } else if (col == 'I') {
                 giftPosition.x = posX
                 giftPosition.y = posY
+            } else if (col == 'X') {
+                enemyPositions.push({
+                    x: posX,
+                    y: posY
+                })
             }
             // La claberita
             game.fillText(emoji, posX, posY);
@@ -93,6 +102,16 @@ function movePlayer() {
     // Colision Fija
     if (giftCollision) {
         console.log('Subiste de nivel');
+    }
+
+    const enemyCollision = enemyPositions.find(enemy => {
+        const enemyCollisionX = enemy.x.toFixed(2) == playerPosition.x.toFixed(2)
+        const enemyCollisionY = enemy.y.toFixed(2) == playerPosition.y.toFixed(2)
+        return enemyCollisionX && enemyCollisionY
+    })
+    // Colision enemigo
+    if (enemyCollision) {
+        console.log('Chocaste enemigo');
     }
     game.fillText(emojis['PLAYER'], playerPosition.x, playerPosition.y);
 }
