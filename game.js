@@ -14,6 +14,15 @@ let level = 0
 // lives
 let lives = 3;
 const spanLives = document.querySelector('#lives')
+//Tiempo
+const spanTime = document.querySelector('#time')
+let timeStart;
+let timePlayer;
+let timeInterval;
+// Record
+const spanRecord = document.querySelector('#record')
+const pResult = document.querySelector('#result')
+
 // Player
 const playerPosition = {
     x: undefined,
@@ -30,19 +39,27 @@ let enemyPositions = [];
 window.addEventListener('load', setCanvasSize);
 window.addEventListener('resize', setCanvasSize);
 
+function fixNumber(n) {
+    return Number(n.toFixed(2));
+}
+
 function setCanvasSize() {
     // Mismo cuadrado responsive
     if (window.innerHeight > window.innerWidth) {
-        canvasSize = window.innerWidth * 0.758;
+        canvasSize = window.innerWidth * 0.7;
     } else {
-        canvasSize = window.innerHeight * 0.758
+        canvasSize = window.innerHeight * 0.7
     }
+
+    canvasSize = Number(canvasSize.toFixed(0));
 
     canvas.setAttribute('width', canvasSize)
     canvas.setAttribute('height', canvasSize)
 
     elementsSize = canvasSize / 10;
-    startGame(level);
+    elementsSize = Number(elementsSize.toFixed(0))
+    //console.log({ canvasSize, elementsSize });
+    startGame();
 }
 
 function startGame() {
@@ -53,11 +70,18 @@ function startGame() {
     const map = maps[level];
     // Ya no hay mas mapas
     if (!map) {
-        gameWin()
-        return
+        gameWin();
+        return;
     }
     // Mostrar vidas
     showLives();
+
+    //Contador
+    if (!timeStart) {
+        timeStart = Date.now();
+        timeInterval = setInterval(showTime, 100);
+        showRecord()
+    }
     // limpiamos el string con trim y slipt para separarlo por saltos de linea
     const mapRows = map.trim().split('\n');
     //console.log(mapRows);
@@ -93,7 +117,7 @@ function startGame() {
                     y: posY
                 })
             }
-            // La claberita
+
             game.fillText(emoji, posX, posY);
         })
     });
@@ -113,7 +137,7 @@ function movePlayer() {
     const giftCollision = giftCollisionX && giftCollisionY
     // Colision Fija
     if (giftCollision) {
-        console.log('Subiste de nivel');
+        //console.log('Subiste de nivel');
         levelWin();
     }
 
@@ -124,7 +148,7 @@ function movePlayer() {
     })
     // Colision enemigo
     if (enemyCollision) {
-        console.log('Chocaste enemigo');
+        //console.log('Chocaste enemigo');
         levelFail()
     }
     game.fillText(emojis['PLAYER'], playerPosition.x, playerPosition.y);
@@ -137,6 +161,24 @@ function levelWin() {
 
 function gameWin() {
     console.log('Terminaste el juego!!');
+    clearInterval(timeInterval);
+    // Guardar record en localStorage
+    const recordTime = localStorage.getItem('record_time');
+    const playerTime = Date.now() - timeStart;
+
+    if (recordTime) {
+        if (recordTime >= playerTime) {
+            localStorage.setItem('record_time', playerTime)
+            pResult.innerText = 'SUPERASTE EL RECORD!!'
+        } else {
+            pResult.innerText = 'LO SIENTO, NO SUPERASTE EL RECORD!!'
+        }
+    } else {
+        localStorage.setItem('record_time', playerTime)
+        pResult.innerText = 'NADA MAL PARA SER PRIMERA VEZ!!'
+    }
+
+    console.log({ recordTime, playerTime });
 }
 
 function levelFail() {
@@ -145,6 +187,7 @@ function levelFail() {
     if (lives <= 0) {
         lives = 3;
         level = 0;
+        timeStart = undefined;
     }
 
     playerPosition.x = undefined
@@ -154,6 +197,14 @@ function levelFail() {
 
 function showLives() {
     spanLives.innerText = emojis['HEART'].repeat(lives)
+}
+
+function showTime() {
+    spanTime.innerHTML = Date.now() - timeStart
+}
+
+function showRecord() {
+    spanRecord.innerHTML = localStorage.getItem('record_time')
 }
 
 // Escuchar tecla presionada
@@ -166,20 +217,10 @@ btnDown.addEventListener('click', moveDown)
 
 function moveByKeys(event) {
     //console.log(event);
-    switch (event.key) {
-        case 'ArrowUp':
-            moveUp()
-            break;
-        case 'ArrowLeft':
-            moveLeft()
-            break;
-        case 'ArrowRight':
-            moveRight()
-            break;
-        case 'ArrowDown':
-            moveDown()
-            break;
-    }
+    if (event.key == 'ArrowUp') moveUp();
+    else if (event.key == 'ArrowLeft') moveLeft();
+    else if (event.key == 'ArrowRight') moveRight();
+    else if (event.key == 'ArrowDown') moveDown();
 }
 function moveUp() {
     //console.log('Me quiero mover hacia arriba');
