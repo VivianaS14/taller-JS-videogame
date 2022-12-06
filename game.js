@@ -22,7 +22,8 @@ let timeInterval;
 // Record
 const spanRecord = document.querySelector('#record')
 const pResult = document.querySelector('#result')
-
+// Restart
+const btnReStart = document.querySelector('#restart')
 // Player
 const playerPosition = {
     x: undefined,
@@ -204,6 +205,10 @@ function showTime() {
 
 function showRecord() {
     spanRecord.innerHTML = localStorage.getItem('record_time')
+}
+
+function restartGame() {
+    window.location.reload();
 }
 
 // Escuchar tecla presionada
