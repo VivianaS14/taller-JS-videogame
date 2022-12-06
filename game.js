@@ -45,6 +45,8 @@ function startGame() {
     // por cada fila, la volvemos a separar y limpiar, se comvierte en un array de arrays
     const mapRowsCols = mapRows.map(row => row.trim().split(''))
     //console.log(mapCols);
+    // Limpiar mapa anterior
+    game.clearRect(0, 0, canvasSize, canvasSize)
     // Solucion con forEach
     mapRowsCols.forEach((row, rowI) => {
         row.forEach((col, colI) => {
@@ -53,15 +55,31 @@ function startGame() {
             const emoji = emojis[col];
             const posX = elementsSize * (colI + 1);
             const posY = elementsSize * (rowI + 1);
+            // Establecer posicion del jugador
+            if (col == 'O') {
+                if (!playerPosition.x && !playerPosition.y) {
+                    //console.log({ posX, posY }); --> Posicion iniclal del jugador
+                    playerPosition.x = posX;
+                    playerPosition.y = posY;
+                    //console.log({ playerPosition });
+                }
+            }
+            // La claberita
             game.fillText(emoji, posX, posY);
         })
     });
+
+    movePlayer()
     //Solucion con ciclo for
     /* for (let row = 1; row <= 10; row++) {
         for (let col = 1; col <= 10; col++) {
             game.fillText(emojis[mapRowsCols[row - 1][col - 1]], elementsSize * col, elementsSize * row)
         }
     } */
+}
+
+function movePlayer() {
+    game.fillText(emojis['PLAYER'], playerPosition.x, playerPosition.y);
 }
 
 // Escuchar tecla presionada
@@ -90,16 +108,42 @@ function moveByKeys(event) {
     }
 }
 function moveUp() {
-    console.log('Me quiero mover hacia arriba');
+    //console.log('Me quiero mover hacia arriba');
+    //Para no salirnos del mapa 
+    if ((playerPosition.y - elementsSize) < 0) {
+        console.log('OUT');
+    } else {
+        playerPosition.y -= elementsSize
+        startGame()
+    }
 }
 function moveLeft() {
-    console.log('Me quiero mover hacia izquierda');
+    //console.log('Me quiero mover hacia izquierda');
+    //Para no salirnos del mapa 
+    if ((playerPosition.x - elementsSize) <= 0) {
+        console.log('OUT');
+    } else {
+        playerPosition.x -= elementsSize
+        startGame()
+    }
 }
 function moveRight() {
-    console.log('Me quiero mover hacia derecha');
+    //console.log('Me quiero mover hacia derecha');
+    if ((playerPosition.x + elementsSize) > canvasSize) {
+        console.log('OUT');
+    } else {
+        playerPosition.x += elementsSize
+        startGame()
+    }
 }
 function moveDown() {
-    console.log('Me quiero mover hacia abajo');
+    //console.log('Me quiero mover hacia abajo');
+    if ((playerPosition.y + elementsSize) > canvasSize) {
+        console.log('OUT');
+    } else {
+        playerPosition.y += elementsSize
+        startGame()
+    }
 }
 
 //----------------------------------------------------
