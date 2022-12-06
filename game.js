@@ -39,16 +39,12 @@ let enemyPositions = [];
 window.addEventListener('load', setCanvasSize);
 window.addEventListener('resize', setCanvasSize);
 
-function fixNumber(n) {
-    return Number(n.toFixed(2));
-}
-
 function setCanvasSize() {
     // Mismo cuadrado responsive
     if (window.innerHeight > window.innerWidth) {
         canvasSize = window.innerWidth * 0.7;
     } else {
-        canvasSize = window.innerHeight * 0.7
+        canvasSize = window.innerHeight * 0.7;
     }
 
     canvasSize = Number(canvasSize.toFixed(0));
@@ -60,6 +56,9 @@ function setCanvasSize() {
     elementsSize = Number(elementsSize.toFixed(0))
     //console.log({ canvasSize, elementsSize });
     startGame();
+    // Jugador se acomode con el canvas
+    playerPosition.x = undefined
+    playerPosition.y = undefined
 }
 
 function startGame() {
